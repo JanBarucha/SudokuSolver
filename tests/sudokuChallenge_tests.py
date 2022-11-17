@@ -47,10 +47,10 @@ def test_check_what_number_can_be_in_box():
     assert result == ({(0, 0): 0, (0, 1): 0, (1, 2): 0, (2, 2): 0, (2,1):0}, [1, 2, 4, 6, 9])
 
 
-def test_horizont_splieter(sudoku_format):
-    restul = sudokuChallenge.horizont_splieter(sudoku_format)
-    output = []
-    assert True
+def test_horizont_splieter():
+    result = sudokuChallenge.horizont_splieter('123456789')
+
+    assert result == '1234567'
 
 
 def test_box_checker(box_example,horizontal_x_numbs,vertical_y_numbs):
@@ -73,3 +73,5 @@ def test_box_checker(box_example,horizontal_x_numbs,vertical_y_numbs):
         [0, 5, 6],
         [7, 0, 4]
     ] == result
+
+
