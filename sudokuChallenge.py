@@ -1,8 +1,6 @@
 sudoku = '004006079000000602056092300078061030509000406020540890007410920105000000840600100'
 
 
-
-
 def horizont_splieter(sudoku):
     h_list = list()
     group_list_per_three_rows = list()
@@ -18,7 +16,7 @@ def horizont_splieter(sudoku):
 
 def vertical_spliter(sudoku):
     v_list = list()
-    gooup_list_per_three_columns = list()
+    group_list_per_three_columns = list()
 
     for y in range(9):
         v_list.append(
@@ -36,10 +34,10 @@ def vertical_spliter(sudoku):
     for i, x in enumerate(v_list):
         v_list[i] = [int(z) for z in x]
 
-    gooup_list_per_three_columns.append(v_list[0:3])
-    gooup_list_per_three_columns.append(v_list[3:6])
-    gooup_list_per_three_columns.append(v_list[6:9])
-    return gooup_list_per_three_columns
+    group_list_per_three_columns.append(v_list[0:3])
+    group_list_per_three_columns.append(v_list[3:6])
+    group_list_per_three_columns.append(v_list[6:9])
+    return group_list_per_three_columns
 
 
 def box_creator(s):
@@ -120,18 +118,18 @@ def check_what_number_can_be(x, y, vertical_numbs, horizontal_numbs):
 
 
 def check_what_number_can_be_in_box(box):
-    avaliable_box_numbers = set()
+    available_box_numbers = set()
     location_empty_digits = list()
 
     for i, num in enumerate(box):
         for k, num_k in enumerate(num):
-            avaliable_box_numbers.add(int(box[i][k]))
+            available_box_numbers.add(int(box[i][k]))
             if int(box[i][k]) == 0:
                 location_empty_digits.append((i, k))
 
-    avaliable_box_numbers = [x for x in range(1, 10) if x not in avaliable_box_numbers]
+    available_box_numbers = [x for x in range(1, 10) if x not in available_box_numbers]
 
-    return location_empty_digits, avaliable_box_numbers
+    return location_empty_digits, available_box_numbers
 
 
 def box_checker(box, horizontal_numbs, vertical_numbs, flag, location_box):
@@ -208,10 +206,7 @@ def sudoku_solver(sudoku):
     print(box_values_in_matrix)
 
     flag = True
-
-    counter = 0
-
-    while counter < 1000:
+    while flag:
 
         flag = False
 
@@ -226,8 +221,6 @@ def sudoku_solver(sudoku):
             elif i < 9:
                 flag = box_checker(box, horizont_values[2], vertical_values[i % 6], flag, i)[1]
 
-
-        counter += 1
     return box_values_in_matrix
 
 

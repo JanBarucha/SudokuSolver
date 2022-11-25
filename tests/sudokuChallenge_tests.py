@@ -74,4 +74,17 @@ def test_box_checker(box_example,horizontal_x_numbs,vertical_y_numbs):
         [7, 0, 4]
     ] == result
 
+@pytest.fixture()
+def sudoku_full_string():
+    return '004006079000000602056092300078061030509000406020540890007410920105000000840600100'
+def test_sudoku_solver(sudoku_full_string):
+    output = sudokuChallenge.sudoku_solver(sudoku_full_string)
+    for i in output:
+        sum = 0
+        for x in i:
+            for y in x:
+                sum += int(y)
+
+        assert sum == 45
+
 
