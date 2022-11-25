@@ -1,6 +1,8 @@
 sudoku = '004006079000000602056092300078061030509000406020540890007410920105000000840600100'
 
 
+
+
 def horizont_splieter(sudoku):
     h_list = list()
     group_list_per_three_rows = list()
@@ -37,10 +39,7 @@ def vertical_spliter(sudoku):
     gooup_list_per_three_columns.append(v_list[0:3])
     gooup_list_per_three_columns.append(v_list[3:6])
     gooup_list_per_three_columns.append(v_list[6:9])
-    return v_list
-
-
-print(vertical_spliter(sudoku))
+    return gooup_list_per_three_columns
 
 
 def box_creator(s):
@@ -122,20 +121,20 @@ def check_what_number_can_be(x, y, vertical_numbs, horizontal_numbs):
 
 def check_what_number_can_be_in_box(box):
     avaliable_box_numbers = set()
-    location_empty_digits = dict()
+    location_empty_digits = list()
 
     for i, num in enumerate(box):
         for k, num_k in enumerate(num):
-            avaliable_box_numbers.add(box[i][k])
-            if box[i][k] == 0:
-                location_empty_digits[(i, k)] = 0
+            avaliable_box_numbers.add(int(box[i][k]))
+            if int(box[i][k]) == 0:
+                location_empty_digits.append((i, k))
 
     avaliable_box_numbers = [x for x in range(1, 10) if x not in avaliable_box_numbers]
 
     return location_empty_digits, avaliable_box_numbers
 
 
-def box_checker(box, horizontal_numbs, vertical_numbs):
+def box_checker(box, horizontal_numbs, vertical_numbs, flag, location_box):
     location_empty_digits = check_what_number_can_be_in_box(box)
 
     # Key : str, val : [tuple()]
@@ -143,26 +142,93 @@ def box_checker(box, horizontal_numbs, vertical_numbs):
 
     for i in location_empty_digits[1]:
         # k (x,y)
-        values_to_insert_in_box[str(i)] = []
+        i = str(i)
+        values_to_insert_in_box[i] = []
         for k in location_empty_digits[0]:
 
             if i not in vertical_numbs[k[1]] and i not in horizontal_numbs[k[0]]:
-                values_to_insert_in_box[str(i)].append((k[0], k[1]))
+                values_to_insert_in_box[i].append((k[1], k[0]))
 
     for key, value in values_to_insert_in_box.items():
-        if (len(value) == 1):
-            box[value[0][0]][value[0][1]] = int(key)
 
-    return box
+        if (len(value) == 1):
+            flag = True
+            box[value[0][1]][value[0][0]] = key
+
+            update_horizontal_vertical(horizontal_numbs, vertical_numbs, value[0][0], value[0][1], key,
+                                       location_box)
+
+    return box, flag
+
+
+def update_horizontal_vertical(horizontal, vertical, x, y, value, location_box):
+    if location_box == 0:
+        horizontal[y][x] = value
+        vertical[x][y] = value
+    elif location_box == 1:
+        horizontal[y][x + 3] = value
+        vertical[x][y] = value
+    elif location_box == 2:
+        horizontal[y][x + 6] = value
+        vertical[x][y] = value
+    elif location_box == 3:
+        horizontal[y][x] = value
+        vertical[x][y + 3] = value
+    elif location_box == 4:
+        horizontal[y][x + 3] = value
+        vertical[x][y + 3] = value
+    elif location_box == 5:
+        horizontal[y][x + 6] = value
+        vertical[x][y + 3] = value
+    elif location_box == 6:
+        horizontal[y][x] = value
+        vertical[x][y + 6] = value
+    elif location_box == 7:
+        horizontal[y][x + 3] = value
+        vertical[x][y + 6] = value
+    elif location_box == 8:
+        horizontal[y][x + 6] = value
+        vertical[x][y + 6] = value
 
 
 def sudoku_solver(sudoku):
     horizont_values = horizont_splieter(sudoku)
     vertical_values = vertical_spliter(sudoku)
 
+    for i, k in enumerate(horizont_values):
+        for z, w in enumerate(k):
+            horizont_values[i][z] = [str(elem) for elem in w]
+
+    for i, k in enumerate(vertical_values):
+        for z, w in enumerate(k):
+            vertical_values[i][z] = [str(elem) for elem in w]
+
     box_values = box_creator(sudoku)
     box_values_in_matrix = box_creator_to_matrix(box_values)
+    print(box_values_in_matrix)
 
-    # for box in box_values_in_matrix:
+    flag = True
 
-    pass
+    counter = 0
+
+    while counter < 1000:
+
+        flag = False
+
+        for i, box in enumerate(box_values_in_matrix):
+
+            if i < 3:
+                flag = box_checker(box, horizont_values[0], vertical_values[i], flag, i)[1]
+
+            elif i < 6:
+                flag = box_checker(box, horizont_values[1], vertical_values[i % 3], flag, i)[1]
+
+            elif i < 9:
+                flag = box_checker(box, horizont_values[2], vertical_values[i % 6], flag, i)[1]
+
+
+        counter += 1
+    return box_values_in_matrix
+
+
+print(sudoku_solver(sudoku))
