@@ -1,12 +1,12 @@
 sudoku = '004006079000000602056092300078061030509000406020540890007410920105000000840600100'
 
 
-def horizont_splieter(sudoku):
+def horizontal_split(sudoku_input_as_test):
     h_list = list()
     group_list_per_three_rows = list()
 
-    for x in range(0, len(sudoku), 9):
-        h_list.append([int(y) for y in sudoku[x: x + 9]])
+    for x in range(0, len(sudoku_input_as_test), 9):
+        h_list.append([int(y) for y in sudoku_input_as_test[x: x + 9]])
 
     group_list_per_three_rows.append(h_list[0:3])
     group_list_per_three_rows.append(h_list[3:6])
@@ -14,21 +14,21 @@ def horizont_splieter(sudoku):
     return group_list_per_three_rows
 
 
-def vertical_spliter(sudoku):
+def vertical_split(sudoku_input_as_test):
     v_list = list()
     group_list_per_three_columns = list()
 
     for y in range(9):
         v_list.append(
-            sudoku[y] +
-            sudoku[y + 9] +
-            sudoku[y + 18] +
-            sudoku[y + 27] +
-            sudoku[y + 36] +
-            sudoku[y + 45] +
-            sudoku[y + 54] +
-            sudoku[y + 63] +
-            sudoku[y + 72]
+            sudoku_input_as_test[y] +
+            sudoku_input_as_test[y + 9] +
+            sudoku_input_as_test[y + 18] +
+            sudoku_input_as_test[y + 27] +
+            sudoku_input_as_test[y + 36] +
+            sudoku_input_as_test[y + 45] +
+            sudoku_input_as_test[y + 54] +
+            sudoku_input_as_test[y + 63] +
+            sudoku_input_as_test[y + 72]
         )
 
     for i, x in enumerate(v_list):
@@ -38,6 +38,11 @@ def vertical_spliter(sudoku):
     group_list_per_three_columns.append(v_list[3:6])
     group_list_per_three_columns.append(v_list[6:9])
     return group_list_per_three_columns
+
+
+"""
+box_creator creates 3x3 squares as list. As input it is sudoku string input. 
+"""
 
 
 def box_creator(s):
@@ -149,7 +154,7 @@ def box_checker(box, horizontal_numbs, vertical_numbs, flag, location_box):
 
     for key, value in values_to_insert_in_box.items():
 
-        if (len(value) == 1):
+        if len(value) == 1:
             flag = True
             box[value[0][1]][value[0][0]] = key
 
@@ -190,8 +195,8 @@ def update_horizontal_vertical(horizontal, vertical, x, y, value, location_box):
 
 
 def sudoku_solver(sudoku):
-    horizont_values = horizont_splieter(sudoku)
-    vertical_values = vertical_spliter(sudoku)
+    horizont_values = horizontal_split(sudoku)
+    vertical_values = vertical_split(sudoku)
 
     for i, k in enumerate(horizont_values):
         for z, w in enumerate(k):
